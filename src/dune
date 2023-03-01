@@ -1,0 +1,2 @@
+(library (name dedent) (public_name dedent) (libraries base)
+ (preprocess (pps ppx_jane)))
