@@ -19,52 +19,75 @@ More precisely, on an input string, `Dedent` does the following:
 For example:
 
 ```ocaml
-let string =
-  {|
-  > a
-  >  b
-  >   c
-  |} |> Dedent.string
+# let string =
+    {|
+    > a
+    >  b
+    >   c
+    |} |> Dedent.string
+val string : string = "a\n b\n  c"
 ```
-
-That yields the string `"a\n b\n c"`.
 
 Use `Dedent.lines` to dedent and return a list of lines rather than a
 string.  For the above example, `Dedent.lines` yields:
 
-    [ "a"; " b"; "  c" ]
+```ocaml
+# let lines =
+    {|
+    > a
+    >  b
+    >   c
+    |} |> Dedent.lines
+val lines : string list = ["a"; " b"; "  c"]
+```
 
 Each of the aspects of `Dedent`'s input handling is optional.  You
 don't have to use a line prefix.  This yields the same string:
 
 ```ocaml
-let string =
-  {|
-  a
-   b
-    c
-  |} |> Dedent.string
+# let string =
+    {|
+    a
+     b
+      c
+    |} |> Dedent.string
+val string : string = "a\n b\n  c"
 ```
 
 You don't have to indent.  This yields the same string:
 
 ```ocaml
-let string =
-  {|
-a
- b
-  c
-|} |> Dedent.string
+# let string =
+    {|
+  a
+   b
+    c
+  |} |> Dedent.string
+val string : string = "a\n b\n  c"
 ```
 
-You don't have to put delimiters on their own lines.  This yields the
+You don't have to put closing delimiters on their own lines.  This yields the
 same string:
 
 ```ocaml
-let string =
-  {|a
- b
-  c|} |> Dedent.string
+# let string =
+    {|
+  a
+   b
+    c|} |> Dedent.string
+val string : string = "a\n b\n  c"
+```
+
+Any text on the same line as the opening delimiter has its leading whitespace
+stripped, and does not affect the indentation of the rest of the lines:
+
+```ocaml
+# let string =
+    {|        a
+  b
+   c
+    d|} |> Dedent.string
+val string : string = "a\nb\n c\n  d"
 ```
 
 There is also an extension syntax,
@@ -73,15 +96,12 @@ variant of `[%string]` that applies `[Dedent.string]` to its input
 before substitution.  For example:
 
 ```ocaml
+# let string =
   let bar = "BAR" in
-  let string =
     [%string_dedent
       {|
       > foo
       >   %{bar}
       |}]
-  in
+val string : string = "foo\n  BAR"
 ```
-
-That yields the string `"foo\n  BAR"`.
-
