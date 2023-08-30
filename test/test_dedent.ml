@@ -9,8 +9,8 @@ let make_whitespace_visible : string -> string =
   let replacements : (string -> string) list =
     [ "\n", "\\n"; " ", "_" ]
     |> List.map ~f:(fun (from, with_) ->
-      let search_pattern = Search_pattern.create from in
-      fun in_ -> Search_pattern.replace_all search_pattern ~in_ ~with_)
+         let search_pattern = Search_pattern.create from in
+         fun in_ -> Search_pattern.replace_all search_pattern ~in_ ~with_)
   in
   fun input -> List.fold replacements ~init:input ~f:(fun ac f -> f ac)
 ;;
