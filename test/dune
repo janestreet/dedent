@@ -1,2 +1,6 @@
-(library (name dedent_test) (public_name dedent.test)
- (libraries dedent stdio) (preprocess (pps ppx_jane)))
+(library
+ (name dedent_test)
+ (public_name dedent.test)
+ (libraries dedent stdio)
+ (preprocess
+  (pps ppx_jane)))
