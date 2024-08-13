@@ -9,8 +9,8 @@ let make_whitespace_visible : string -> string =
   let replacements : (string -> string) list =
     [ "\n", "\\n"; " ", "_" ]
     |> List.map ~f:(fun (from, with_) ->
-         let search_pattern = Search_pattern.create from in
-         fun in_ -> Search_pattern.replace_all search_pattern ~in_ ~with_)
+      let search_pattern = Search_pattern.create from in
+      fun in_ -> Search_pattern.replace_all search_pattern ~in_ ~with_)
   in
   fun input -> List.fold replacements ~init:input ~f:(fun ac f -> f ac)
 ;;
@@ -43,14 +43,17 @@ let%expect_test "single-line strings ignore leading and trailing whitespace" =
 ;;
 
 let%expect_test "multi-line empty strings drop the lines with the delimiters" =
-  test {|
+  test
+    {|
 |};
   [%expect {| |}];
-  test {|
+  test
+    {|
 
 |};
   [%expect {| |}];
-  test {|
+  test
+    {|
 
 
 |};
@@ -58,24 +61,28 @@ let%expect_test "multi-line empty strings drop the lines with the delimiters" =
 ;;
 
 let%expect_test "multi-line strings drops lines with delimiters" =
-  test {|
+  test
+    {|
 a
 |};
   [%expect {| a |}]
 ;;
 
 let%expect_test "multi-line strings support leading and trailing blank lines" =
-  test {|
+  test
+    {|
 
 a
 |};
   [%expect {| \na |}];
-  test {|
+  test
+    {|
 a
 
 |};
   [%expect {| a\n |}];
-  test {|
+  test
+    {|
 
 a
 
@@ -84,13 +91,16 @@ a
 ;;
 
 let%expect_test "closing delimiter can be in any column" =
-  test {|a
+  test
+    {|a
 |};
   [%expect {| a |}];
-  test {|a
+  test
+    {|a
  |};
   [%expect {| a |}];
-  test {|a
+  test
+    {|a
   |};
   [%expect {| a |}]
 ;;
@@ -103,32 +113,38 @@ let%expect_test "strip trailing whitespace" =
 ;;
 
 let%expect_test "drop min indentation" =
-  test {|
+  test
+    {|
 a
  b
 |};
   [%expect {| a\n_b |}];
-  test {|
+  test
+    {|
  a
   b
 |};
   [%expect {| a\n_b |}];
-  test {|
+  test
+    {|
   a
    b
 |};
   [%expect {| a\n_b |}];
-  test {|
+  test
+    {|
   a
   b
     |};
   [%expect {| a\nb |}];
-  test {|
+  test
+    {|
   a
  b
     |};
   [%expect {| _a\nb |}];
-  test {|
+  test
+    {|
   a
 b
     |};
@@ -138,17 +154,20 @@ b
      on the doc comment to figure out the first line's indentation, but we didn't want to
      build that behavior into the ppx. This lets us mostly achieve the same effect by
      inspecting the string contents alone. *)
-  test {| a
+  test
+    {| a
           b
 |};
   [%expect {| a\nb |}];
   (* Bad behavior, but also uncommon. Let's tell people to use line prefixes for that. *)
-  test {|    deliberately indented more
+  test
+    {|    deliberately indented more
          normal indentation
 |};
   [%expect {| deliberately_indented_more\nnormal_indentation |}];
   (* Here's how you get the deliberate indentation of the first line. *)
-  test {|>      deliberately indented more
+  test
+    {|>      deliberately indented more
          > normal indentation
 |};
   [%expect {| _____deliberately_indented_more\nnormal_indentation |}]
@@ -157,11 +176,13 @@ b
 let%expect_test "drop line prefix" =
   test {| > a |};
   [%expect {| a |}];
-  test {|
+  test
+    {|
 > a
 |};
   [%expect {| a |}];
-  test {|
+  test
+    {|
 > a
 > b
 |};
@@ -174,7 +195,8 @@ let%expect_test "line prefix must be followed by a space" =
 ;;
 
 let%expect_test "drop line prefix after dropping indentation" =
-  test {|
+  test
+    {|
  > a
  >  b
 |};
@@ -182,12 +204,14 @@ let%expect_test "drop line prefix after dropping indentation" =
 ;;
 
 let%expect_test "only drop line prefix if it is present on all lines" =
-  test {|
+  test
+    {|
 > a
 b
 |};
   [%expect {| >_a\nb |}];
-  test {|
+  test
+    {|
 > a
  > b
 |};
