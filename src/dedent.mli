@@ -1,4 +1,4 @@
-(** [Dedent] is a library for improving readability of multi-line string constants.  See
+(** [Dedent] is a library for improving readability of multi-line string constants. See
     the README for details and examples. *)
 
 open! Base
