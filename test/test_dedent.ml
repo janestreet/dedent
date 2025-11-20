@@ -2,8 +2,8 @@ open! Base
 open! Stdio
 open! Import
 
-(* We make spaces and newlines visible to make the behavior clearer, and so that
-   changes in behavior cause diffs that need to be reviewed. *)
+(* We make spaces and newlines visible to make the behavior clearer, and so that changes
+   in behavior cause diffs that need to be reviewed. *)
 let make_whitespace_visible : string -> string =
   let module Search_pattern = String.Search_pattern in
   let replacements : (string -> string) list =
